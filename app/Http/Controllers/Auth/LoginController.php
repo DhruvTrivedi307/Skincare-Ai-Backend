@@ -10,15 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
 
-    public function landing()
-    {
-        return view('login');
-    }
-
-    public function showLogin(){
-        return view("login");
-    }
-
     public function login(Request $request)
     {
         $request->validate([
@@ -30,9 +21,10 @@ class LoginController extends Controller
             "email" => $request->email,
             "password" => $request->password
         ])) {
-            return response()->json([
-                "error" => "Invalid credentials"
-            ], 401);
+            // return response()->json([
+            //     "error" => "Invalid credentials"
+            // ], 401);
+            return redirect()->route("login")->with("error","Invalid email or password.");
         }
 
         $user = Auth::user();

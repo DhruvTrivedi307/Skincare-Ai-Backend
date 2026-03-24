@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wowdash - Bootstrap 5 Admin Dashboard HTML Template</title>
+    <title>Sign Up</title>
     <!-- remix icon font css  -->
     <link rel="stylesheet" href="assets/css/remixicon.css">
     <!-- BootStrap css -->

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wowdash - Bootstrap 5 Admin Dashboard HTML Template</title>
+    <title>Login</title>
     <!-- remix icon font css  -->
     <link rel="stylesheet" href="assets/css/remixicon.css">
     <!-- BootStrap css -->
@@ -165,7 +165,13 @@
                     </a> --}}
                     <h4 class="mb-12">Sign In to your Account</h4>
                     <p class="mb-32 text-secondary-light text-md">Welcome back! please enter your detail</p>
+                </div>  
+                @if (session('error'))
+                <div class="alert alert-danger bg-danger-100 text-danger-600 border-danger-100 px-24 py-11 mb-0 fw-semibold text-md radius-8 d-flex align-items-center justify-content-between mb-3" role="alert">
+                    {{ session('error') }} 
+                    <button class="remove-button text-danger-600 text-xxl line-height-1"> <iconify-icon icon="iconamoon:sign-times-light" class="icon"></iconify-icon></button>
                 </div>
+                @endif
                 <form action="{{ route('login.submit') }}" method="post">
                     @csrf
                     <div class="icon-field mb-16">
@@ -199,7 +205,7 @@
 
                     <button type="submit" class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32">Sign In</button>
 
-                    <div class="mt-32 center-border-horizontal text-center">
+                    {{-- <div class="mt-32 center-border-horizontal text-center">
                         <span class="bg-base z-1 px-4">Or sign in with</span>
                     </div>
                     <div class="mt-32 d-flex align-items-center gap-3">
@@ -207,7 +213,7 @@
                             class="fw-semibold text-primary-light py-16 px-24 w-50 border radius-12 text-md d-flex align-items-center justify-content-center gap-12 line-height-1 bg-hover-primary-50">
                             <iconify-icon icon="ic:baseline-facebook"
                                 class="text-primary-600 text-xl line-height-1"></iconify-icon>
-                            Google
+                            Facebook
                         </button>
                         <button type="button"
                             class="fw-semibold text-primary-light py-16 px-24 w-50 border radius-12 text-md d-flex align-items-center justify-content-center gap-12 line-height-1 bg-hover-primary-50">
@@ -215,7 +221,7 @@
                                 class="text-primary-600 text-xl line-height-1"></iconify-icon>
                             Google
                         </button>
-                    </div>
+                    </div> --}}
                     <div class="mt-32 text-center text-sm">
                         <p class="mb-0">Don’t have an account? <a href="{{ route('register') }}"
                                 class="text-primary-600 fw-semibold">Sign Up</a></p>
@@ -255,7 +261,28 @@
     <!-- main js -->
     <script src="assets/js/app.js"></script>
 
-    <script>
+    <script>\
+        function initializePasswordToggle(toggleSelector) {
+            $(toggleSelector).on('click', function () {
+                $(this).toggleClass("ri-eye-off-line");
+                var input = $($(this).attr("data-toggle"));
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        }
+        initializePasswordToggle('.toggle-password');\
+    </script>
+
+    <script>    
+        $('.remove-button').on('click', function() {
+            $(this).closest('.alert').addClass('d-none')
+        }); 
+    </script>
+
+        <script>
         // ================== Password Show Hide Js Start ==========
         function initializePasswordToggle(toggleSelector) {
             $(toggleSelector).on('click', function () {

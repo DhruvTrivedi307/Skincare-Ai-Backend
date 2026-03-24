@@ -32,11 +32,11 @@
     <div class="row gy-4">
         <div class="col-lg-5">
             <div class="user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100">
-                <img src="assets/images/user-grid/user-grid-bg1.png" alt="Image" class="w-100 object-fit-cover">
-                <div class="pb-24 ms-16 mb-24 me-16  mt--100">
-                    <div class="text-center border border-top-0 border-start-0 border-end-0">
-                        <img src="assets/images/user-grid/user-grid-img14.png" alt="Image"
-                            class="border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover">
+                {{-- <img src="assets/images/user-grid/user-grid-bg1.png" alt="Image" class="w-100 object-fit-cover"> --}}
+                <div class="pb-24 ms-16 mb-24 me-16">
+                    <div class="text-center border border-top-0 border-start-0 border-end-0 mt-5">
+                        <img src="assets/images/user.png" alt="Image"
+                            class="border br-black border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover p-5">
                         <h6 class="mb-0 mt-16">{{ Auth::user()->name }}</h6>
                         <span class="text-secondary-light mb-16">{{ Auth::user()->email }}</span>
                     </div>
@@ -104,25 +104,6 @@
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-edit-profile" role="tabpanel"
                             aria-labelledby="pills-edit-profile-tab" tabindex="0">
-                            <h6 class="text-md text-primary-light mb-16">Profile Image</h6>
-                            <!-- Upload Image Start -->
-                            <div class="mb-24 mt-16">
-                                <div class="avatar-upload">
-                                    <div
-                                        class="avatar-edit position-absolute bottom-0 end-0 me-24 mt-16 z-1 cursor-pointer">
-                                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" hidden>
-                                        <label for="imageUpload"
-                                            class="w-32-px h-32-px d-flex justify-content-center align-items-center bg-primary-50 text-primary-600 border border-primary-600 bg-hover-primary-100 text-lg rounded-circle">
-                                            <iconify-icon icon="solar:camera-outline" class="icon"></iconify-icon>
-                                        </label>
-                                    </div>
-                                    <div class="avatar-preview">
-                                        <div id="imagePreview">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Upload Image End -->
                             <form action="{{ route('profile.update') }}" method="POST">
                                 @csrf
                                 @method('PUT')
@@ -215,8 +196,8 @@
                                         <input type="password" class="form-control radius-8" id="your-password"
                                             placeholder="Enter Current Password*" name="password">
                                         <span
-                                        class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
-                                        data-toggle="#your-password"></span>
+                                            class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
+                                            data-toggle="#your-password"></span>
                                         @error('password')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -230,10 +211,10 @@
                                         <input type="password" class="form-control radius-8" id="confirm-password"
                                             placeholder="Enter New Password*" name="new_password">
                                         <span
-                                        class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
-                                        data-toggle="#confirm-password"></span>
+                                            class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
+                                            data-toggle="#confirm-password"></span>
                                         @error('new_password')
-                                            <small class="text-danger">{{ $message }}</small>                                         
+                                            <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
                                 </div>
@@ -245,8 +226,8 @@
                                         <input type="password" class="form-control radius-8" id="confirm-password"
                                             placeholder="Confirm Password*" name="new_password_confirmation">
                                         <span
-                                        class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
-                                        data-toggle="#confirm-password"></span>
+                                            class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
+                                            data-toggle="#confirm-password"></span>
                                         @error('new_password')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -313,5 +294,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function initializePasswordToggle(toggleSelector) {
+            $(toggleSelector).on('click', function () {
+                $(this).toggleClass("ri-eye-off-line");
+                var input = $($(this).attr("data-toggle"));
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        }
+        initializePasswordToggle('.toggle-password');
+    </script>
 
 @endsection

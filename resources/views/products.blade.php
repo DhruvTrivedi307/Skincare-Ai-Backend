@@ -28,7 +28,7 @@
                             @foreach ($products as $p)
                                 <tr class="text-center">
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $p->name }}</td>
+                                    <td style="max-width: 250px;">{{ $p->name }}</td>
                                     <td><img src="{{ asset('images/' . $p->image) }}" alt="{{ $p->name }}" width="100" class="rounded-2"></td>
                                     <td style="max-width: 250px; white-space: normal;">
                                         <div class="d-flex flex-wrap gap-1 justify-content-center">
@@ -48,20 +48,20 @@
                                         <div class="d-flex align-items-center gap-10 justify-content-center">
                                             <button type="button"
                                                 class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
-                                                data-bs-toggle="modal" data-bs-target="#editProductModal">
+                                                data-bs-toggle="modal" data-bs-target="#editProductModal{{ $p->id }}">
                                                 <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
                                             </button>
                                             <button type="button"
                                                 class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
-                                                data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+                                                data-bs-toggle="modal" data-bs-target="#deleteProductModal{{ $p->id }}">
                                                 <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
 
-                                <div class="modal fade" id="editProductModal" tabindex="-1">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal fade" id="editProductModal{{ $p->id }}" tabindex="-1">
+                                    <div class="modal-dialog modal-xl modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit Product</h5>
@@ -77,19 +77,26 @@
                                                         <input type="text" class="form-control" id="name" name="product_name"
                                                             value="{{ $p->name }}" required>
                                                     </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Concerns</label>
-                                                        <div class="d-flex flex-wrap gap-2">
-                                                            @foreach ($concerns as $concern)
-                                                                <label class="concern-chip">
-                                                                    <input type="checkbox"
-                                                                        name="skin_concern_id[]"
-                                                                        value="{{ $concern->id }}"
-                                                                        hidden
-                                                                        {{ $p->concerns->contains($concern->id) ? 'checked' : '' }}>
-                                                                    <span>{{ $concern->concern }}</span>
-                                                                </label>
-                                                            @endforeach
+                                                    <div>
+                                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                                            <label for="name" class="form-label">Concerns</label>
+                                                            <input type="text" class="border rounded-pill p-2" name="search" placeholder="Search..." style="font-size: 14px;" id="concernSearch">
+                                                        </div>
+                                                        <div style="min-height: 250px; overflow-y: auto;">
+                                                            <div class="d-flex flex-wrap gap-2">
+                                                                @foreach ($concerns as $concern)
+                                                                    <label class="concern-chip concern-item">
+                                                                        <input type="checkbox"
+                                                                            name="skin_concern_id[]"
+                                                                            value="{{ $concern->id }}"
+                                                                            hidden
+                                                                            {{ $p->concerns->contains($concern->id) ? 'checked' : '' }}>
+                                                                        <span data-name="{{ strtolower($concern->concern) }}">
+                                                                            {{ $concern->concern }}
+                                                                        </span>
+                                                                    </label>
+                                                                @endforeach
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="mb-3">
@@ -109,7 +116,7 @@
                                     </div>
                                 </div>
 
-                                <div class="modal fade" id="deleteProductModal" tabindex="-1">
+                                <div class="modal fade" id="deleteProductModal{{ $p->id }}" tabindex="-1">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -121,6 +128,7 @@
                                                 @method('DELETE')
                                                 <div class="modal-body">
                                                     <p>Are you sure you want to delete this product?</p>
+                                                    <p>Id:{{ $loop->iteration }}, Name: {{ $p->name }}</p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
@@ -145,7 +153,7 @@
     </div>
 
     <div class="modal fade" id="addProductModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add Product</h5>
@@ -162,27 +170,34 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
                                 <label for="name" class="form-label">Concerns</label>
-                                <button data-bs-toggle="modal" data-bs-target="#manageConcernModal" class="p-3"><iconify-icon icon="tabler:edit"></iconify-icon></button>
+                                <div>
+                                    <input type="text" class="border rounded-pill p-2" name="search" placeholder="Search..." style="font-size: 14px;" id="concernSearch">
+                                    <button data-bs-toggle="modal" data-bs-target="#manageConcernModal" class="p-3"><iconify-icon icon="tabler:edit"></iconify-icon></button>
+                                </div>
                             </div>
-                            <div class="d-flex flex-wrap gap-2">
-                                @foreach ($concerns as $concern)
+                            <div style="min-height: 250px; overflow-y: auto;">
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach ($concerns as $concern)
+                                        <label class="concern-chip concern-item">
+                                            <input type="checkbox"
+                                                value="{{ $concern->id }}"
+                                                name="skin_concern_id[]"
+                                                hidden>
+                                            <span data-name="{{ strtolower($concern->concern) }}">
+                                                {{ $concern->concern }}
+                                            </span>
+                                        </label>
+                                    @endforeach
                                     <label class="concern-chip">
-                                        <input type="checkbox"
-                                               value="{{ $concern->id }}"
-                                               name="skin_concern_id[]"
-                                               hidden>
-                                        <span>{{ $concern->concern }}</span>
+                                        <input type="button"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#addConcernModal"
+                                                hidden>
+                                        <span><iconify-icon icon="tabler:plus" class="menu-icon"></iconify-icon></span>
                                     </label>
-                                @endforeach
-                                <label class="concern-chip">
-                                    <input type="button"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#addConcernModal"
-                                            hidden>
-                                    <span><iconify-icon icon="tabler:plus" class="menu-icon"></iconify-icon></span>
-                                </label>
+                                </div>
                             </div>
 
                             <style>
@@ -294,5 +309,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('concernSearch').addEventListener('keyup', function () {
+            let value = this.value.toLowerCase();
+
+            document.querySelectorAll('.concern-item').forEach(function (item) {
+                let name = item.querySelector('span').dataset.name;
+
+                if (name.includes(value)) {
+                    item.style.display = "inline-flex";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        });
+    </script>
 
 @endsection

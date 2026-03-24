@@ -211,7 +211,7 @@
                                             @endphp
 
                                             <div class="modal fade" id="jsonModal{{ $d->id }}" tabindex="-1" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-dialog modal-xl modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header p-24">
                                                             <h6 class="modal-title">Analysis Result - ID {{ $d->id }}</h6>
@@ -293,15 +293,15 @@
                                                     class="bg-danger-focus text-danger-main px-24 py-4 rounded-pill fw-medium text-sm">Error</span>
                                             @else
                                                 <span class="
-                                                                                        @if ($d->status === "completed")
-                                                                                            bg-success-focus text-success-main
-                                                                                        @elseif ($d->status === "failed")
-                                                                                            bg-danger-focus text-danger-main
-                                                                                        @elseif ($d->status === "processing")
-                                                                                            bg-warning-focus text-warning-main
-                                                                                        @endif    
-                                                                                        px-24 py-4 rounded-pill fw-medium text-sm
-                                                                                    ">{{ $d->status }}</span>
+                                                    @if ($d->status === "completed")
+                                                        bg-success-focus text-success-main
+                                                    @elseif ($d->status === "failed")
+                                                        bg-danger-focus text-danger-main
+                                                    @elseif ($d->status === "processing")
+                                                        bg-warning-focus text-warning-main
+                                                    @endif    
+                                                    px-24 py-4 rounded-pill fw-medium text-sm
+                                                ">{{ $d->status }}</span>
                                             @endif
                                         </td>
                                     </tr>

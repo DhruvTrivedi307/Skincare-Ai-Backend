@@ -61,8 +61,8 @@
                                 <td>{{ $user->created_at->format('d M Y') }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <img src="assets/images/user-list/user-list1.png" alt="Image"
-                                            class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                                        {{-- <img src="assets/images/user.png" alt="Image"
+                                            class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden"> --}}
                                         <div class="flex-grow-1">
                                             <span class="text-md mb-0 fw-normal text-secondary-light">{{ $user->name }}</span>
                                         </div>

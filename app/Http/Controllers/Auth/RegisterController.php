@@ -10,10 +10,6 @@ use Illuminate\Support\Str;
 class RegisterController extends Controller
 {
 
-    public function showRegister(){
-        return view("register");
-    }
-
     public function register(Request $request)
     {
         $request->validate([
