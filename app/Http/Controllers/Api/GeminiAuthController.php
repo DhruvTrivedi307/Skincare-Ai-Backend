@@ -270,6 +270,15 @@ class GeminiAuthController extends Controller
 
                 Log::info('Recommended Products', [$products]);
 
+                $admin_id = User::where('token', $token)->value('id');
+                $token_usage = SkinAnalysis::where('admin_id', $admin_id)->sum('token_usage');
+
+                Log::info('Token usage', [$token_usage]);
+
+                $update_token_usage = User::where("id", $admin_id)->update(["token_usage" => intval($token_usage)]);
+
+                Log::info('Admin token usage updated', [$update_token_usage]);
+
                 Log::info("Skin Analysis Complete");
                 
                 return response()->json([
@@ -289,4 +298,5 @@ class GeminiAuthController extends Controller
             "status" => "processing"
         ]);
     }
+
 }

@@ -26,6 +26,7 @@ class User extends Authenticatable
         'url',
         'admin_id',
         'user_token',
+        'token_usage',
         'password',
     ];
 

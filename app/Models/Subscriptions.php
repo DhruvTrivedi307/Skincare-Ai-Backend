@@ -12,5 +12,6 @@ class Subscriptions extends Model
         'duration',
         'scans',
         'tokens',
+        'credits',
     ];
 }

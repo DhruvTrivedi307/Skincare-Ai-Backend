@@ -137,6 +137,74 @@
                 </div><!-- card end -->
             </div>
         </div>
+    @else
+        <div class="row row-cols-xxxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1 gy-4">
+            <div class="col">
+                <div class="card shadow-none border bg-gradient-start-1 h-100">
+                    <div class="card-body p-20">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                            <div>
+                                <p class="fw-medium text-primary-light mb-1">Total Users</p>
+                                <h6 class="mb-0">{{ $users }}</h6>
+                            </div>
+                            <div
+                                class="w-50-px h-50-px bg-cyan rounded-circle d-flex justify-content-center align-items-center">
+                                <iconify-icon icon="gridicons:multiple-users" class="text-white text-2xl mb-0"></iconify-icon>
+                            </div>
+                        </div>
+                        <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
+                            <span class="d-inline-flex align-items-center gap-1 text-success-main"><iconify-icon
+                                    icon="bxs:up-arrow" class="text-xs"></iconify-icon> +5000</span>
+                            Last 30 days users
+                        </p>
+                    </div>
+                </div><!-- card end -->
+            </div>
+            <div class="col">
+                <div class="card shadow-none border bg-gradient-start-4 h-100">
+                    <div class="card-body p-20">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                            <div>
+                                <p class="fw-medium text-primary-light mb-1">Total Scans</p>
+                                <h6 class="mb-0">{{ $scans }}</h6>
+                            </div>
+                            <div
+                                class="w-50-px h-50-px bg-success rounded-circle d-flex justify-content-center align-items-center">
+                                <iconify-icon icon="fluent:scan-person-24-filled"
+                                    class="text-white text-2xl mb-0"></iconify-icon>
+                            </div>
+                        </div>
+                        <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
+                            <span class="d-inline-flex align-items-center gap-1 text-success-main"><iconify-icon
+                                    icon="bxs:up-arrow" class="text-xs"></iconify-icon> +200</span>
+                            Last 30 days users
+                        </p>
+                    </div>
+                </div><!-- card end -->
+            </div>
+            <div class="col">
+                <div class="card shadow-none border bg-gradient-start-6 h-100">
+                    <div class="card-body p-20">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                            <div>
+                                <p class="fw-medium text-primary-light mb-1">Total Credits Usage</p>
+                                <h6 class="mb-0">{{ intval($token_usage/100) }}</h6>
+                            </div>
+                            <div
+                                class="w-50-px h-50-px bg-warning rounded-circle d-flex justify-content-center align-items-center">
+                                <iconify-icon icon="fluent:ticket-diagonal-16-filled"
+                                    class="text-white text-2xl mb-0"></iconify-icon>
+                            </div>
+                        </div>
+                        <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
+                            <span class="d-inline-flex align-items-center gap-1 text-success-main"><iconify-icon
+                                    icon="bxs:up-arrow" class="text-xs"></iconify-icon> +200</span>
+                            Last 30 days users
+                        </p>
+                    </div>
+                </div><!-- card end -->
+            </div>
+        </div>
     @endif
 
     <div class="flex flex-row mt-5">
@@ -247,12 +315,12 @@
                                                                     <table class="table table-bordered">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Region</th>
-                                                                                <th>Issues</th>
-                                                                                <th>Confidence</th>
-                                                                                <th>Rating</th>
-                                                                                <th>Skin Rating</th>
-                                                                                <th>Result</th>
+                                                                                <th class="text-center">Region</th>
+                                                                                <th class="text-center">Issues</th>
+                                                                                <th class="text-center">Confidence</th>
+                                                                                <th class="text-center">Rating</th>
+                                                                                <th class="text-center">Skin Rating</th>
+                                                                                <th class="text-center">Result</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
@@ -280,7 +348,7 @@
                                                             @endif
 
                                                             <span><b>Token Used :</b> {{ $d->token_usage ?? 'N/A' }}</span> <br>
-                                                            <span><b>Date : </b> {{ $d->created_at ?? 'N/A' }}</span>
+                                                            <span><b>Date : </b> {{ \Carbon\Carbon::parse($d->created_at)->format('d M Y') ." at ". \Carbon\Carbon::parse($d->created_at)->format('h:i:s a'). " UTC" ?? 'N/A' }}</span>
 
                                                         </div>
                                                     </div>

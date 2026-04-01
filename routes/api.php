@@ -12,6 +12,12 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/analyze', [GeminiAuthController::class, "analyze"])->middleware('throttle:ai-analyze','admin-token');
 
-Route::get('/analysis/{id}', [GeminiAuthController::class, 'result']);
+Route::get('/all-analysis', [AdminController::class, "getAllAnalysis"])->middleware('admin-token');
 
-Route::get('/products', [ProductController::class, 'getProducts']);
+Route::get('/analysis/{id}', [AdminController::class, 'getResult'])->middleware('admin-token');
+
+Route::get('/get-users', [AdminController::class, "getUsers"])->middleware('admin-token');
+
+Route::get('/get-scans', [AdminController::class, "getScans"])->middleware('admin-token');
+
+Route::get('/get-token-usage', [AdminController::class, "getTokenUsage"])->middleware('admin-token');

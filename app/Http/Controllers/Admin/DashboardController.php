@@ -7,13 +7,16 @@ use App\Models\SkinAnalysis;
 use App\Models\Subscriptions;
 use App\Models\UsageMetaData;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Exceptions;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    public function fetch_admin() 
+    public function fetch_admin()
     {
         if (Auth::user()->role === 'Super-Admin') {
             $data = SkinAnalysis::paginate(10);
@@ -21,17 +24,19 @@ class DashboardController extends Controller
             $users = SkinAnalysis::distinct('user_token')->count('user_token');
             $scans = SkinAnalysis::count();
             $token_usage = SkinAnalysis::sum('token_usage');
-            $expenses = 
-                UsageMetaData::sum('prompt_token_count') / 1000000 * 1.25 + 
-                UsageMetaData::sum('candidates_token_count') / 1000000 * 10;
+
+            $inputTokens = UsageMetaData::sum('prompt_token_count');
+            $outputTokens = UsageMetaData::sum('candidates_token_count') + UsageMetaData::sum('thoughts_token_count');
+            $expenses = ($inputTokens / 1000000) * 0.30 + ($outputTokens / 1000000) * 2.50;
+            $expenses = round($expenses, 4);
         } else {
             $admin_token = User::where('token', Auth::user()->token)->first();
             $admin_id = $admin_token->id;
             $data = SkinAnalysis::where('admin_id', $admin_id)->paginate(10);
             $subscription = null;
-            $users = null;
-            $scans = null;
-            $token_usage = null;
+            $users = SkinAnalysis::where('admin_id', $admin_id)->distinct('user_token')->count('user_token');
+            $scans = SkinAnalysis::where('admin_id', $admin_id)->count();
+            $token_usage = SkinAnalysis::where('admin_id', $admin_id)->sum('token_usage');
             $expenses = null;
         }
 
@@ -133,18 +138,31 @@ class DashboardController extends Controller
         return view("usage-metadata", compact("metadata"));
     }
 
-    public function subscriptions(){
+    public function subscriptions()
+    {
         $subscriptions = Subscriptions::paginate(10);
-        return view("subscriptions", compact("subscriptions"));
+        $req_url = 'https://api.exchangerate-api.com/v4/latest/USD';
+        $response_json = file_get_contents($req_url);
+
+        if (false !== $response_json) {
+            try {
+                $currency_response_object = json_decode($response_json);
+                $usdToInr = $currency_response_object->rates->INR ?? null;
+            } catch (Exception $e) {
+                Log::info("Failed to fetch currency exchange API.");
+            }
+        }
+        return view("subscriptions", compact("subscriptions","usdToInr"));
     }
 
-    public function add_subscriptions(Request $request){
+    public function add_subscriptions(Request $request)
+    {
         $request->validate([
             'type' => 'required|string',
             'price' => 'required|numeric',
             'duration' => 'required|string',
             'scans' => 'required|integer',
-            'tokens' => 'required|integer',
+            'credits' => 'required|integer',
         ]);
 
         $subscription = new Subscriptions();
@@ -152,19 +170,21 @@ class DashboardController extends Controller
         $subscription->price = $request->price;
         $subscription->duration = $request->duration;
         $subscription->scans = $request->scans;
-        $subscription->tokens = $request->tokens;
+        $subscription->tokens = $request->credits * 100;
+        $subscription->credits = $request->credits;
         $subscription->save();
 
         return redirect()->route('subscriptions')->with('success', 'Subscription plan added successfully.');
     }
 
-    public function update_subscriptions(Request $request, $id){
+    public function update_subscriptions(Request $request, $id)
+    {
         $request->validate([
             'type' => 'required|string',
             'price' => 'required|numeric',
             'duration' => 'required|string',
             'scans' => 'required|integer',
-            'tokens' => 'required|integer',
+            'credits' => 'required|integer',
         ]);
 
         $subscription = Subscriptions::find($id);
@@ -176,13 +196,15 @@ class DashboardController extends Controller
         $subscription->price = $request->price;
         $subscription->duration = $request->duration;
         $subscription->scans = $request->scans;
-        $subscription->tokens = $request->tokens;
+        $subscription->tokens = $request->credits * 100;
+        $subscription->credits = $request->credits;
         $subscription->save();
 
         return redirect()->route('subscriptions')->with('success', 'Subscription plan updated successfully.');
     }
 
-    public function delete_subscriptions($id){
+    public function delete_subscriptions($id)
+    {
         $subscription = Subscriptions::find($id);
         if (!$subscription) {
             return redirect()->route('subscriptions')->with('error', 'Subscription plan not found.');
@@ -193,12 +215,14 @@ class DashboardController extends Controller
         return redirect()->route('subscriptions')->with('success', 'Subscription plan deleted successfully.');
     }
 
-    public function coupon_codes(){
+    public function coupon_codes()
+    {
         $coupons = DB::table('coupon_codes')->paginate(10);
         return view("coupon-codes", compact("coupons"));
     }
 
-    public function add_coupon_code(Request $request){
+    public function add_coupon_code(Request $request)
+    {
         $request->validate([
             'code' => 'required|string|unique:coupon_codes,code',
             'description' => 'nullable|string',
@@ -224,7 +248,8 @@ class DashboardController extends Controller
         return redirect()->route('coupon-codes')->with('success', 'Coupon code added successfully.');
     }
 
-    public function update_coupon_code(Request $request, $id){
+    public function update_coupon_code(Request $request, $id)
+    {
         $request->validate([
             'code' => 'required|string|unique:coupon_codes,code,' . $id,
             'description' => 'nullable|string',
@@ -251,9 +276,9 @@ class DashboardController extends Controller
         return redirect()->route('coupon-codes')->with('success', 'Coupon code updated successfully.');
     }
 
-    public function delete_coupon_code($id){
+    public function delete_coupon_code($id)
+    {
         DB::table('coupon_codes')->where('id', $id)->delete();
         return redirect()->route('coupon-codes')->with('success', 'Coupon code deleted successfully.');
     }
-    
 }

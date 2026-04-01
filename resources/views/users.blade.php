@@ -42,6 +42,7 @@
                             <th scope="col">Email</th>
                             <th scope="col">Company</th>
                             <th scope="col">URL</th>
+                            <th scope="col">Token Usage</th>
                             <th scope="col" class="text-center">Status</th>
                             <th scope="col" class="text-center">Action</th>
                         </tr>
@@ -62,8 +63,8 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         {{-- <img src="assets/images/user.png" alt="Image"
-                                            class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden"> --}}
-                                        <div class="flex-grow-1">
+                                            class="w-40-px h-40-px rounded-circle shrink me-12 overflow-hidden"> --}}
+                                        <div class="grow">
                                             <span class="text-md mb-0 fw-normal text-secondary-light">{{ $user->name }}</span>
                                         </div>
                                     </div>
@@ -71,6 +72,7 @@
                                 <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $user->email }}</span></td>
                                 <td>{{ $user->company_name }}</td>
                                 <td>{{ $user->url }}</td>
+                                <td>{{ $user->token_usage }}</td>
                             <td class="text-center">
                                 <span
                                     class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">Active</span>

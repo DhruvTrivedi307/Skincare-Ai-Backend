@@ -10,12 +10,6 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
 
-    public function getProducts()
-    {
-        $products = Products::with('concerns')->get();
-        return response()->json($products);
-    }
-
     public function products()
     {
         $products = Products::with('concerns')->paginate(10);
