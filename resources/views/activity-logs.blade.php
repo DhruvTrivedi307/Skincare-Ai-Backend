@@ -1,3 +1,7 @@
+@section('title')
+    Activity Logs
+@endsection
+
 @extends('layouts.app')
 
 @section('content')

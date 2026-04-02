@@ -1,3 +1,7 @@
+@section('title')
+    Settings
+@endsection
+
 @extends('layouts.app')
 
 @section('content')

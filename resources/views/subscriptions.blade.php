@@ -1,3 +1,7 @@
+@section('title')
+    Subscriptions
+@endsection
+
 @extends('layouts.app')
 
 @section('content')

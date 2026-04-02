@@ -1,3 +1,7 @@
+@section('title')
+    Usage Metadata
+@endsection
+
 @extends('layouts.app')
 @section('content')
 

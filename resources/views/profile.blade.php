@@ -1,5 +1,8 @@
-@extends('layouts.app')
+@section('title')
+    Profile
+@endsection
 
+@extends('layouts.app')
 
 @section('content')
 

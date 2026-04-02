@@ -1,3 +1,7 @@
+@section('title')
+    Coupon Codes
+@endsection
+
 @extends('layouts.app')
 
 @section('content')

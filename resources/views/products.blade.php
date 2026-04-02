@@ -1,3 +1,7 @@
+@section('title')
+    Products
+@endsection
+
 @extends('layouts.app')
 @section('content')
 
