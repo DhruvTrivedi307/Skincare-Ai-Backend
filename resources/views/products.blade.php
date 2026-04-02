@@ -77,13 +77,13 @@
                                                         <input type="text" class="form-control" id="name" name="product_name"
                                                             value="{{ $p->name }}" required>
                                                     </div>
-                                                    <div>
+                                                    <div class="concern-selector">
                                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                                             <label for="name" class="form-label">Concerns</label>
-                                                            <input type="text" class="border rounded-pill p-2" name="search" placeholder="Search..." style="font-size: 14px;" id="concernSearch">
+                                                            <input type="text" class="border rounded-pill p-2 concern-search" name="search" placeholder="Search..." style="font-size: 14px;">
                                                         </div>
                                                         <div style="min-height: 250px; overflow-y: auto;">
-                                                            <div class="d-flex flex-wrap gap-2">
+                                                            <div class="d-flex flex-wrap gap-2 concern-list">
                                                                 @foreach ($concerns as $concern)
                                                                     <label class="concern-chip concern-item">
                                                                         <input type="checkbox"
@@ -169,16 +169,16 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 concern-selector">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <label for="name" class="form-label">Concerns</label>
                                 <div>
-                                    <input type="text" class="border rounded-pill p-2" name="search" placeholder="Search..." style="font-size: 14px;" id="concernSearch">
+                                    <input type="text" class="border rounded-pill p-2 concern-search" name="search" placeholder="Search..." style="font-size: 14px;">
                                     <button data-bs-toggle="modal" data-bs-target="#manageConcernModal" class="p-3"><iconify-icon icon="tabler:edit"></iconify-icon></button>
                                 </div>
                             </div>
                             <div style="min-height: 250px; overflow-y: auto;">
-                                <div class="d-flex flex-wrap gap-2">
+                                <div class="d-flex flex-wrap gap-2 concern-list">
                                     @foreach ($concerns as $concern)
                                         <label class="concern-chip concern-item">
                                             <input type="checkbox"
@@ -311,17 +311,20 @@
     </div>
 
     <script>
-        document.getElementById('concernSearch').addEventListener('keyup', function () {
-            let value = this.value.toLowerCase();
+        document.querySelectorAll('.concern-search').forEach(function (searchInput) {
+            searchInput.addEventListener('input', function () {
+                let value = this.value.toLowerCase();
+                let concernSelector = this.closest('.concern-selector');
 
-            document.querySelectorAll('.concern-item').forEach(function (item) {
-                let name = item.querySelector('span').dataset.name;
-
-                if (name.includes(value)) {
-                    item.style.display = "inline-flex";
-                } else {
-                    item.style.display = "none";
+                if (!concernSelector) {
+                    return;
                 }
+
+                concernSelector.querySelectorAll('.concern-item').forEach(function (item) {
+                    let name = item.querySelector('span').dataset.name;
+
+                    item.style.display = name.includes(value) ? 'inline-flex' : 'none';
+                });
             });
         });
     </script>

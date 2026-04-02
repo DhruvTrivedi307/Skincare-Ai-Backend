@@ -253,11 +253,27 @@ class GeminiAuthController extends Controller
                     }
                 }
 
-                $merged = collect($issues)->flatten()->unique()->map(fn($item) => ucwords(strtolower($item)))->values()->toArray();
+                $normalizedIssues = collect($issues)
+                    ->flatten()
+                    ->filter(fn($item) => is_string($item) && trim($item) !== '')
+                    ->map(fn($item) => strtolower(preg_replace('/\s+/', ' ', trim($item))))
+                    ->unique()
+                    ->values();
+
+                $merged = $normalizedIssues
+                    ->map(fn($item) => ucwords($item))
+                    ->values()
+                    ->toArray();
 
                 Log::info('Extracted Issues', [$merged]);
 
-                $concern_ids = SkinConcerns::all()->whereIn('concern', $merged)->pluck('id');
+                $concern_ids = SkinConcerns::all()
+                    ->filter(function ($concern) use ($normalizedIssues) {
+                        $normalizedConcern = strtolower(preg_replace('/\s+/', ' ', trim((string) $concern->concern)));
+
+                        return $normalizedIssues->contains($normalizedConcern);
+                    })
+                    ->pluck('id');
 
                 Log::info('Concern IDs', [$concern_ids]);
 
@@ -266,7 +282,8 @@ class GeminiAuthController extends Controller
                     ->join('products', 'products.id', '=', 'product_concerns.product_id')
                     ->select('products.*')
                     ->distinct()
-                    ->get();
+                    ->get()
+                    ->values();
 
                 Log::info('Recommended Products', [$products]);
 
@@ -280,12 +297,16 @@ class GeminiAuthController extends Controller
                 Log::info('Admin token usage updated', [$update_token_usage]);
 
                 Log::info("Skin Analysis Complete");
+
+                $payload = is_array($result)
+                    ? [...$result, 'products' => $products]
+                    : ['result' => $result, 'products' => $products];
                 
                 return response()->json([
                     'id' => $id,
                     'token' => $token,
                     'status' => 'completed',
-                    'data' => $result,
+                    'data' => $payload,
                     'products' => $products
                 ]);
 

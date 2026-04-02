@@ -27,7 +27,7 @@ class AnalyzeJob implements ShouldQueue
         $this->imagePath = $imagePath;
     }
 
-    /**
+    /** 
      * Create a new job instance.
      */
     public function handle(): void
@@ -43,7 +43,7 @@ class AnalyzeJob implements ShouldQueue
             Log::error('AnalyzeJob aborted because file does not exist');
             return;
         }
-
+ 
         $image = file_get_contents($filePath);
 
         Log::info('Image loaded from disk', [
